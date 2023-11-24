@@ -10,37 +10,59 @@ uuidv4();
 export const TodoWrapper = () => {
     const [todos, setTodos] = useState([]);
 
+    useEffect(() => {
+        const storedTodos = JSON.parse(sessionStorage.getItem('todos')) || [];
+        setTodos(storedTodos);
+    }, [])
+    
+    useEffect(() => {
+        sessionStorage.setItem('todos', JSON.stringify(todos));
+    }, [todos])
+    
+    useEffect(() => {
+        show_task()
+    }, [])
+
     const addtodo = (todo) => {
         setTodos([...todos, { id: uuidv4(), task: todo, completed: false, isEditing: false }]);
-        
-    };
+        save_data()
+    }
     
     const togglecomplete = id =>{
         setTodos(todos.map(todo => todo.id === id ? {
             ...todo, completed: !todo.completed} : todo
         ))
-        
+        save_data()
     }
 
     const deletetodo = id => {
         setTodos(todos.filter(todo => todo.id !== id))
-       
+        save_data()
     }
 
     const edittodo = id =>{
         setTodos(todos.map(todo => todo.id === id ? {
             ...todo, isEditing: !todo.isEditing} : todo
             ))
-           
+            save_data()
     }
     
     const edittask = (task, id) => {
         setTodos(todos.map(todo => todo.id === id ? {
            ...todo, task, isEditing: !todo.isEditing 
         }: todo))
-      
+        save_data()
     }
 
+    const save_data = () => {
+        sessionStorage.setItem('data', JSON.stringify(todos.map((todo) => todo.task)))
+    }
+
+
+    const show_task = () => {
+        const storedTasks = JSON.parse(sessionStorage.getItem('data')) || [];
+        setTodos(storedTasks.map((task) => ({ id: uuidv4(), task, completed: false, isEditing: false })))
+    }
 
     return (
          <div>
