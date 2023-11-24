@@ -16,13 +16,18 @@ export const TodoWrapper = () => {
             ...todo, completed: !todo.completed} : todo
         ))
     }
+
+    const deletetodo = id => {
+        setTodos(todos.filter(todo => todo.id !== id))
+    }
     return (
         <div className='TodoWrapper'>
             <h1>First thing’s first</h1>
             <TodoForm addTodo={addTodo} />
             {todos.map((todo) => (
                 <Todo task={todo} key={todo.id}
-                toggle_complete={togglecomplete} />
+                toggle_complete={togglecomplete} 
+                delete_todo = {deletetodo}/>
             ))}
         </div>
     );
